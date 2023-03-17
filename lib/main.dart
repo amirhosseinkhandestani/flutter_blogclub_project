@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blogclub_project/data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,26 +17,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           primarySwatch: Colors.blue,
           textTheme: TextTheme(
-            titleMedium: TextStyle(
-                fontFamily: defaultFontFamily,
-                color: secondaryTextColor,
-                fontSize: 15),
-            titleLarge: TextStyle(
-                fontFamily: defaultFontFamily,
-                fontWeight: FontWeight.bold,
-                color: primaryTextColor),
-          )),
+              titleMedium: TextStyle(
+                  fontFamily: defaultFontFamily,
+                  color: secondaryTextColor,
+                  fontSize: 15),
+              titleLarge: TextStyle(
+                  fontFamily: defaultFontFamily,
+                  fontWeight: FontWeight.bold,
+                  color: primaryTextColor),
+              bodyMedium: TextStyle(
+                  fontFamily: defaultFontFamily,
+                  color: secondaryTextColor,
+                  fontSize: 12))),
       home: const HomeScreen(),
     );
   }
@@ -46,6 +41,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+    final stories = AppDatabase.stories;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -59,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Hi,Jonathan!',
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: themeData.textTheme.titleMedium,
                     ),
                     Image.asset(
                       'assets/img/icons/notification.png',
@@ -73,8 +70,70 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(32, 0, 0, 24),
                 child: Text(
                   'Explore today',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: themeData.textTheme.titleLarge,
                 ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 90,
+                child: ListView.builder(
+                    itemCount: stories.length,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
+                    itemBuilder: (context, index) {
+                      final story = stories[index];
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 68,
+                                  height: 68,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(24),
+                                    gradient: const LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        colors: [
+                                          Color(0xff376aed),
+                                          Color(0xff49b0e2),
+                                          Color(0xff9cecfb),
+                                        ]),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.asset(
+                                          'assets/img/stories/${story.imageFileName}'),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    'assets/img/icons/${story.iconFileName}',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(story.name)
+                          ],
+                        ),
+                      );
+                    }),
               )
             ],
           ),
