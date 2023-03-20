@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blogclub_project/carousel/carousel_slider.dart';
 import 'package:flutter_blogclub_project/data.dart';
 
 void main() {
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
                   fontSize: 18),
               titleLarge: TextStyle(
                   fontFamily: defaultFontFamily,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: primaryTextColor),
               bodyMedium: TextStyle(
@@ -81,10 +83,106 @@ class HomeScreen extends StatelessWidget {
                   style: themeData.textTheme.headlineMedium,
                 ),
               ),
-              _StoryList(stories: stories)
+              _StoryList(stories: stories),
+              const SizedBox(
+                height: 16,
+              ),
+              _CategoryList()
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CategoryList extends StatelessWidget {
+  const _CategoryList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final categories = AppDatabase.categories;
+    return CarouselSlider.builder(
+        itemCount: categories.length,
+        itemBuilder: (context, index, realIndex) {
+          return _CategoryItem(
+            left: realIndex == 0 ? 32 : 8,
+            right: realIndex == categories.length - 1 ? 32 : 8,
+            category: categories[realIndex],
+          );
+        },
+        options: CarouselOptions(
+            scrollDirection: Axis.horizontal,
+            viewportFraction: 0.8,
+            aspectRatio: 1.2,
+            initialPage: 0,
+            disableCenter: true,
+            scrollPhysics: const BouncingScrollPhysics(),
+            enlargeStrategy: CenterPageEnlargeStrategy.height,
+            enlargeCenterPage: true,
+            enableInfiniteScroll: false));
+  }
+}
+
+class _CategoryItem extends StatelessWidget {
+  final Category category;
+  final double left;
+  final double right;
+  const _CategoryItem({
+    super.key,
+    required this.category,
+    required this.left,
+    required this.right,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(left, 0, right, 0),
+      child: Stack(
+        children: [
+          Positioned.fill(
+              top: 100,
+              left: 65,
+              right: 65,
+              bottom: 24,
+              child: Container(
+                decoration: const BoxDecoration(boxShadow: [
+                  BoxShadow(blurRadius: 20, color: Color(0xaa0d253c))
+                ]),
+              )),
+          Positioned.fill(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: Image.asset(
+                  'assets/img/posts/large/${category.imageFileName}',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              foregroundDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32),
+                  gradient: const LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: [Color(0xff0d253c), Colors.transparent])),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(32)),
+            ),
+          ),
+          Positioned(
+            bottom: 48,
+            left: 32,
+            child: Text(category.title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .apply(color: Colors.white)),
+          )
+        ],
       ),
     );
   }
