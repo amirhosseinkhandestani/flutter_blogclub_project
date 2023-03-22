@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
     final primaryTextColor = Color(0xff0d253c);
     final secondaryTextColor = Color(0xff2d4379);
     final primaryColor = Color(0xff376aed);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
