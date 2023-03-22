@@ -1,9 +1,16 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blogclub_project/carousel/carousel_slider.dart';
 import 'package:flutter_blogclub_project/data.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark));
   runApp(const MyApp());
 }
 
@@ -16,11 +23,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryTextColor = Color(0xff0d253c);
     final secondaryTextColor = Color(0xff2d4379);
+    final primaryColor = Color(0xff376aed);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+          textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                  textStyle: MaterialStateProperty.all(const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: defaultFontFamily)))),
           primarySwatch: Colors.blue,
           textTheme: TextTheme(
+              headlineSmall: const TextStyle(
+                  fontFamily: defaultFontFamily,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700),
               headlineMedium: TextStyle(
                 fontFamily: defaultFontFamily,
                 fontSize: 24,
@@ -36,12 +54,27 @@ class MyApp extends StatelessWidget {
                   fontFamily: defaultFontFamily,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: primaryColor),
+              titleSmall: TextStyle(
+                  fontFamily: defaultFontFamily,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
                   color: primaryTextColor),
+              bodySmall: const TextStyle(
+                  fontFamily: defaultFontFamily,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff7b8bb2),
+                  fontSize: 10),
               bodyMedium: TextStyle(
                   fontFamily: defaultFontFamily,
                   color: secondaryTextColor,
                   fontSize: 12))),
-      home: const HomeScreen(),
+      home: Stack(
+        children: [
+          const Positioned.fill(child: HomeScreen()),
+          Positioned(bottom: 0, right: 0, left: 0, child: _BottomNaigation())
+        ],
+      ),
     );
   }
 }
@@ -56,6 +89,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -87,7 +121,11 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              _CategoryList()
+              const _CategoryList(),
+              const _PostList(),
+              const SizedBox(
+                height: 32,
+              )
             ],
           ),
         ),
@@ -300,6 +338,242 @@ class _Story extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(17),
       child: Image.asset('assets/img/stories/${story.imageFileName}'),
+    );
+  }
+}
+
+class _PostList extends StatelessWidget {
+  const _PostList({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final posts = AppDatabase.posts;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 32, right: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Lastest News',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'More',
+                    style: TextStyle(color: Color(0xff376aed)),
+                  ))
+            ],
+          ),
+        ),
+        ListView.builder(
+            itemCount: posts.length,
+            itemExtent: 141,
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              return _Post(post: post);
+            })
+      ],
+    );
+  }
+}
+
+class _Post extends StatelessWidget {
+  const _Post({
+    super.key,
+    required this.post,
+  });
+
+  final PostData post;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(32, 8, 32, 8),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(blurRadius: 10, color: Color(0x1a5282ff))
+          ]),
+      child: Row(
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child:
+                  Image.asset('assets/img/posts/small/${post.imageFileName}')),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post.caption,
+                    style: const TextStyle(
+                        fontFamily: MyApp.defaultFontFamily,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color(0xff376aed)),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(post.title,
+                      style: Theme.of(context).textTheme.titleSmall),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Icon(
+                        CupertinoIcons.hand_thumbsup,
+                        size: 16,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        post.likes,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Icon(
+                        CupertinoIcons.clock,
+                        size: 16,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        post.time,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            post.isBookmarked
+                                ? CupertinoIcons.bookmark_fill
+                                : CupertinoIcons.bookmark,
+                            size: 16,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _BottomNaigation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 85,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              height: 65,
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: const Color(0xff9b8487).withOpacity(0.3),
+                )
+              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  BottomNaigationItem(
+                      iconFileName: 'Home.png',
+                      activeIconFileName: 'Home.png',
+                      title: 'Home'),
+                  BottomNaigationItem(
+                      iconFileName: 'Articles.png',
+                      activeIconFileName: 'Articles.png',
+                      title: 'Article'),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  BottomNaigationItem(
+                      iconFileName: 'Search.png',
+                      activeIconFileName: 'Search.png',
+                      title: 'Search'),
+                  BottomNaigationItem(
+                      iconFileName: 'Menu.png',
+                      activeIconFileName: 'Menu.png',
+                      title: 'Menu')
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 65,
+              height: 85,
+              alignment: Alignment.topCenter,
+              child: Container(
+                  height: 65,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32.5),
+                      color: const Color(0xff376aed),
+                      border: Border.all(color: Colors.white, width: 4)),
+                  child: Image.asset('assets/img/icons/plus.png')),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomNaigationItem extends StatelessWidget {
+  final String iconFileName;
+  final String activeIconFileName;
+  final String title;
+
+  const BottomNaigationItem(
+      {super.key,
+      required this.iconFileName,
+      required this.activeIconFileName,
+      required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('assets/img/icons/$iconFileName'),
+        const SizedBox(
+          height: 4,
+        ),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodySmall,
+        )
+      ],
     );
   }
 }
