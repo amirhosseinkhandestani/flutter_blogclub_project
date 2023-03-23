@@ -142,4 +142,19 @@ class AppDatabase {
           imageFileName: 'small_post_3.jpg'),
     ];
   }
+
+  static List<OnBordingItem> get OnBordingItems {
+    List<OnBordingItem> item = [];
+    for (var i = 0; i < 4; i++) {
+      item.add(OnBordingItem('titel', 'description'));
+    }
+    return item;
+  }
+}
+
+class OnBordingItem {
+  final String titel;
+  final String description;
+
+  OnBordingItem(this.titel, this.description);
 }
