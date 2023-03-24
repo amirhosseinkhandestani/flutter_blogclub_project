@@ -27,12 +27,16 @@ class $AssetsImgBackgroundGen {
   AssetGenImage get onboarding =>
       const AssetGenImage('assets/img/background/onboarding.png');
 
+  /// File path: assets/img/background/single_post.png
+  AssetGenImage get singlePost =>
+      const AssetGenImage('assets/img/background/single_post.png');
+
   /// File path: assets/img/background/splash.png
   AssetGenImage get splash =>
       const AssetGenImage('assets/img/background/splash.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [onboarding, splash];
+  List<AssetGenImage> get values => [onboarding, singlePost, splash];
 }
 
 class $AssetsImgIconsGen {
@@ -90,6 +94,10 @@ class $AssetsImgIconsGen {
   /// File path: assets/img/icons/plus.png
   AssetGenImage get plus => const AssetGenImage('assets/img/icons/plus.png');
 
+  /// File path: assets/img/icons/thumbs-up .png
+  AssetGenImage get thumbsUp =>
+      const AssetGenImage('assets/img/icons/thumbs-up .png');
+
   /// List of all assets
   List<dynamic> get values => [
         articles,
@@ -105,7 +113,8 @@ class $AssetsImgIconsGen {
         category3,
         category4,
         notification,
-        plus
+        plus,
+        thumbsUp
       ];
 }
 

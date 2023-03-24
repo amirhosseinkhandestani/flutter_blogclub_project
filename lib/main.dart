@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_blogclub_project/article.dart';
 import 'package:flutter_blogclub_project/carousel/carousel_slider.dart';
 import 'package:flutter_blogclub_project/data.dart';
 import 'package:flutter_blogclub_project/gen/assets.gen.dart';
@@ -44,6 +45,13 @@ class MyApp extends StatelessWidget {
               onBackground: primaryTextColor,
               background: Color(0xfffbfcff),
               surface: Colors.white),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: primaryColor,
+          ),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              foregroundColor: primaryTextColor,
+              titleSpacing: 32),
           textTheme: TextTheme(
               headlineSmall: const TextStyle(
                   fontFamily: FontFamily.avenir,
@@ -80,7 +88,7 @@ class MyApp extends StatelessWidget {
                   color: secondaryTextColor,
                   fontSize: 12))),
       //
-      home: const SplashScreen(),
+      home: ArticleScreen(),
     );
   }
 }
