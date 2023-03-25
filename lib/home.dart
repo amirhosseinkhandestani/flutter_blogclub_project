@@ -318,8 +318,10 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SimpleScreen())),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SimpleScreen(
+                tabName: 'Home',
+              ))),
       child: Container(
         margin: const EdgeInsets.fromLTRB(32, 8, 32, 8),
         decoration: BoxDecoration(
