@@ -8,6 +8,7 @@ import 'package:flutter_blogclub_project/data.dart';
 import 'package:flutter_blogclub_project/gen/assets.gen.dart';
 import 'package:flutter_blogclub_project/gen/fonts.gen.dart';
 import 'package:flutter_blogclub_project/home.dart';
+import 'package:flutter_blogclub_project/profile.dart';
 import 'package:flutter_blogclub_project/splash.dart';
 
 void main() {
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
                   color: secondaryTextColor,
                   fontSize: 12))),
       //
-      home: ArticleScreen(),
+      home: const ProfileScreen(),
     );
   }
 }
