@@ -184,7 +184,7 @@ class _BottomNaigation extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   BottomNaigationItem(
-                      iconFileName: 'home.png',
+                      iconFileName: 'Home.png',
                       activeIconFileName: 'homeactive.png',
                       onTab: () {
                         onTab(homeIndex);
@@ -201,7 +201,7 @@ class _BottomNaigation extends StatelessWidget {
                       title: 'Article'),
                   Expanded(child: Container()),
                   BottomNaigationItem(
-                      iconFileName: 'search.png',
+                      iconFileName: 'Search.png',
                       activeIconFileName: 'searchactive.png',
                       onTab: () {
                         onTab(searchIndex);
@@ -209,7 +209,7 @@ class _BottomNaigation extends StatelessWidget {
                       isActive: selectedIndex == searchIndex,
                       title: 'Search'),
                   BottomNaigationItem(
-                      iconFileName: 'menu.png',
+                      iconFileName: 'Menu.png',
                       activeIconFileName: 'menuactive.png',
                       onTab: () {
                         onTab(menuIndex);
