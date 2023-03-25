@@ -89,12 +89,79 @@ class MyApp extends StatelessWidget {
                   color: secondaryTextColor,
                   fontSize: 12))),
       //
-      home: const ProfileScreen(),
+      home: const MainScreen(),
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+const int homeIndex = 0;
+const int articleIndex = 1;
+const int searchIndex = 2;
+const int menuIndex = 3;
+const double bottomNavigationHeight = 65;
+
+class _MainScreenState extends State<MainScreen> {
+  int selectedScreenIndex = homeIndex;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            bottom: bottomNavigationHeight,
+            child: IndexedStack(
+              index: selectedScreenIndex,
+              children: [
+                HomeScreen(),
+                ArticleScreen(),
+                SearchScreen(),
+                ProfileScreen()
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: _BottomNaigation(
+                selectedIndex: selectedScreenIndex,
+                onTab: (int index) {
+                  setState(() {
+                    selectedScreenIndex = index;
+                  });
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SearchScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'SearchScreen',
+        style: Theme.of(context).textTheme.headlineMedium,
+      ),
     );
   }
 }
 
 class _BottomNaigation extends StatelessWidget {
+  final Function(int index) onTab;
+  final int selectedIndex;
+
+  const _BottomNaigation(
+      {super.key, required this.onTab, required this.selectedIndex});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -115,26 +182,40 @@ class _BottomNaigation extends StatelessWidget {
               ]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children: [
                   BottomNaigationItem(
-                      iconFileName: 'Home.png',
-                      activeIconFileName: 'Home.png',
+                      iconFileName: 'home.png',
+                      activeIconFileName: 'homeactive.png',
+                      onTab: () {
+                        onTab(homeIndex);
+                      },
+                      isActive: selectedIndex == homeIndex,
                       title: 'Home'),
                   BottomNaigationItem(
-                      iconFileName: 'Articles.png',
-                      activeIconFileName: 'Articles.png',
+                      iconFileName: 'articel.png',
+                      activeIconFileName: 'articleactiv.png',
+                      onTab: () {
+                        onTab(articleIndex);
+                      },
+                      isActive: selectedIndex == articleIndex,
                       title: 'Article'),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  Expanded(child: Container()),
                   BottomNaigationItem(
-                      iconFileName: 'Search.png',
-                      activeIconFileName: 'Search.png',
+                      iconFileName: 'search.png',
+                      activeIconFileName: 'searchactive.png',
+                      onTab: () {
+                        onTab(searchIndex);
+                      },
+                      isActive: selectedIndex == searchIndex,
                       title: 'Search'),
                   BottomNaigationItem(
-                      iconFileName: 'Menu.png',
-                      activeIconFileName: 'Menu.png',
-                      title: 'Menu')
+                      iconFileName: 'menu.png',
+                      activeIconFileName: 'menuactive.png',
+                      onTab: () {
+                        onTab(menuIndex);
+                      },
+                      isActive: selectedIndex == menuIndex,
+                      title: 'Profile')
                 ],
               ),
             ),
@@ -145,7 +226,7 @@ class _BottomNaigation extends StatelessWidget {
               height: 85,
               alignment: Alignment.topCenter,
               child: Container(
-                  height: 65,
+                  height: bottomNavigationHeight,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(32.5),
                       color: const Color(0xff376aed),
@@ -163,27 +244,44 @@ class BottomNaigationItem extends StatelessWidget {
   final String iconFileName;
   final String activeIconFileName;
   final String title;
+  final bool isActive;
+  final Function() onTab;
 
   const BottomNaigationItem(
       {super.key,
       required this.iconFileName,
       required this.activeIconFileName,
-      required this.title});
+      required this.title,
+      required this.onTab,
+      required this.isActive});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset('assets/img/icons/$iconFileName'),
-        const SizedBox(
-          height: 4,
+    final ThemeData themeData = Theme.of(context);
+    return Expanded(
+      child: InkWell(
+        onTap: onTab,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/img/icons/${isActive ? activeIconFileName : iconFileName}',
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(title,
+                  style: themeData.textTheme.bodySmall!.apply(
+                      color: isActive
+                          ? themeData.colorScheme.primary
+                          : themeData.textTheme.bodySmall!.color))
+            ],
+          ),
         ),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodySmall,
-        )
-      ],
+      ),
     );
   }
 }
