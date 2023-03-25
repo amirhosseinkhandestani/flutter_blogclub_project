@@ -6,6 +6,7 @@ import 'package:flutter_blogclub_project/carousel/carousel_slider.dart';
 import 'package:flutter_blogclub_project/data.dart';
 import 'package:flutter_blogclub_project/gen/assets.gen.dart';
 import 'package:flutter_blogclub_project/gen/fonts.gen.dart';
+import 'package:flutter_blogclub_project/main.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -318,7 +319,7 @@ class Post extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => ArticleScreen())),
+          .push(MaterialPageRoute(builder: (context) => SimpleScreen())),
       child: Container(
         margin: const EdgeInsets.fromLTRB(32, 8, 32, 8),
         decoration: BoxDecoration(
